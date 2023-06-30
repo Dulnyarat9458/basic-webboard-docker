@@ -1,28 +1,26 @@
 version: '3.7'
 services:
 
-  mysql:
+  db:
     image: mariadb:latest
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}     
     volumes:
       - ./database:/var/lib/mysql
+    env_file:
+      - .env
       
-
   nodejs:
     build: ../basic-webboard-backend
     depends_on:
-      - mysql
+      - db
     restart: always
     ports:
       - 5000:5000
     environment:
       CHOKIDAR_USEPOLLING: "true"
-    
+    env_file:
+      - .env
+
   react:
     build: ../basic-webboard-frontend
     depends_on:
@@ -33,12 +31,8 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: "true"
 
-
-# networks:
-#   backend:
-#     driver: bridge
-#   frontend:
-#     driver: bridge
-
-
-
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
