@@ -8,7 +8,7 @@ services:
       - ./database:/var/lib/mysql
     env_file:
       - .env
-      
+
   nodejs:
     build: ../basic-webboard-backend
     depends_on:
@@ -20,6 +20,9 @@ services:
       CHOKIDAR_USEPOLLING: "true"
     env_file:
       - .env
+    volumes:
+      - ../basic-webboard-backend:/usr/src/app
+      - /usr/src/app/node_modules
 
   react:
     build: ../basic-webboard-frontend
@@ -32,7 +35,9 @@ services:
       CHOKIDAR_USEPOLLING: "true"
     env_file:
       - react.env
-      
+    volumes:
+      - ../basic-webboard-frontend:/app
+
   adminer:
     image: adminer
     restart: always
